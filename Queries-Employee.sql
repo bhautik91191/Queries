@@ -25,9 +25,9 @@ CREATE TABLE employee_salary (
 CREATE TABLE employee_hobby (
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	fk_employee_id INT,
-	fk_employee_hobby_id INT,
+	fk_hobby_id INT,
 	FOREIGN KEY (fk_employee_id) REFERENCES employee(id),
-	FOREIGN KEY (fk_employee_hobby_id) REFERENCES hobby(id)
+	FOREIGN KEY (fk_hobby_id) REFERENCES hobby(id)
 );
 
 /*! Insert multiple data in all tables */
@@ -67,22 +67,22 @@ VALUE (46000.00, '2022-07-01', 3);
 INSERT INTO employee_salary (salary, DATE, fk_employee_id)
 VALUE (9000.00, '2022-07-24', 1);
 
-INSERT INTO employee_hobby (fk_employee_id, fk_employee_hobby_id)
+INSERT INTO employee_hobby (fk_employee_id, fk_hobby_id)
 VALUE (1, 3);
 
-INSERT INTO employee_hobby (fk_employee_id, fk_employee_hobby_id)
+INSERT INTO employee_hobby (fk_employee_id, fk_hobby_id)
 VALUE (2, 2);
 
-INSERT INTO employee_hobby (fk_employee_id, fk_employee_hobby_id)
+INSERT INTO employee_hobby (fk_employee_id, fk_hobby_id)
 VALUE (3, 1);
 
-INSERT INTO employee_hobby (fk_employee_id, fk_employee_hobby_id)
+INSERT INTO employee_hobby (fk_employee_id, fk_hobby_id)
 VALUE (3, 2);
 
-INSERT INTO employee_hobby (fk_employee_id, fk_employee_hobby_id)
+INSERT INTO employee_hobby (fk_employee_id, fk_hobby_id)
 VALUE (1, 1);
 
-INSERT INTO employee_hobby (fk_employee_id, fk_employee_hobby_id)
+INSERT INTO employee_hobby (fk_employee_id, fk_hobby_id)
 VALUE (2, 3);
 /*! Delete 2 records of all tables */
 DELETE FROM employee_hobby
@@ -116,24 +116,24 @@ SELECT * FROM employee_salary;
 SELECT * FROM employee_hobby;
 
 /*! Create a select single query to get all employee name, all hobby_name in single column. */
-SELECT e.first_name AS single_column FROM employee e
+SELECT first_name AS single_column FROM employee
 UNION ALL
-SELECT h.name FROM hobby h;
+SELECT NAME FROM hobby;
 
 /*! Create a select query to get  employee name, his/her employee_salary */
-SELECT CONCAT(e.first_name, " ", e.last_name) AS employee_name, s.salary AS employee_salary
-FROM employee e INNER JOIN employee_salary s ON e.id = s.fk_employee_id 
+SELECT CONCAT(e.first_name, " ", e.last_name) AS employee_name, es.salary AS employee_salary
+FROM employee e INNER JOIN employee_salary es ON e.id = es.fk_employee_id 
 ORDER BY e.id
 
 /*! Create a select query to get employee name, total salary of employee, 
 hobby name(comma-separated - you need to use subquery for hobby name). */
-SELECT CONCAT(e.first_name, " ", e.last_name) AS employee_name, SUM(d.salary) AS total_salary, 
+SELECT CONCAT(e.first_name, " ", e.last_name) AS employee_name, SUM(es.salary) AS total_salary, 
 (
-SELECT GROUP_CONCAT(h.name) FROM  employee_hobby eh 
-INNER JOIN hobby h ON eh.`fk_employee_hobby_id`= h.`id`
+SELECT GROUP_CONCAT(h.name) FROM  employee_hobby eh
+INNER JOIN hobby h ON eh.fk_hobby_id = h.`id`
 WHERE eh.fk_employee_id = e.id
 )
  AS hobby_name
 FROM employee e
-INNER JOIN employee_salary d ON d.fk_employee_id = e.id
+INNER JOIN employee_salary es ON es.fk_employee_id = e.id
 GROUP BY e.`id`;
