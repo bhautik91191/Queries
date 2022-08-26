@@ -1,4 +1,4 @@
-/*! Create an “employee” database and 4 tables (hobby, employee, employee_salary, employee_hobby). */
+-- Create an “employee” database and 4 tables (hobby, employee, employee_salary, employee_hobby).
 CREATE TABLE hobby (
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	NAME VARCHAR (30)
@@ -30,7 +30,7 @@ CREATE TABLE employee_hobby (
 	FOREIGN KEY (fk_hobby_id) REFERENCES hobby(id)
 );
 
-/*! Insert multiple data in all tables */
+-- Insert multiple data in all tables
 INSERT INTO employee (first_name, last_name, age, mobile_number, address)
 VALUE ('Bhautik', 'Padmani', 22, '7359333658', 'Rajkot, Gujrat.');
 
@@ -84,7 +84,8 @@ VALUE (1, 1);
 
 INSERT INTO employee_hobby (fk_employee_id, fk_hobby_id)
 VALUE (2, 3);
-/*! Delete 2 records of all tables */
+
+-- Delete 2 records of all tables
 DELETE FROM employee_hobby
 WHERE id > 1;
 
@@ -97,7 +98,7 @@ WHERE id > 1;
 DELETE FROM hobby
 WHERE id > 1;
 
-/*! Truncate all tables */
+-- Truncate all tables
 TRUNCATE TABLE employee_hobby;
 
 TRUNCATE TABLE employee_salary;
@@ -106,7 +107,7 @@ TRUNCATE TABLE employee;
 
 TRUNCATE TABLE hobby;
 
-/*! Create a separate select queries to get a hobby, employee, employee_salary, employee_hobby. */
+-- Create a separate select queries to get a hobby, employee, employee_salary, employee_hobby.
 SELECT * FROM hobby;
 
 SELECT * FROM employee;
@@ -115,12 +116,12 @@ SELECT * FROM employee_salary;
 
 SELECT * FROM employee_hobby;
 
-/*! Create a select single query to get all employee name, all hobby_name in single column. */
-SELECT first_name AS single_column FROM employee
+-- Create a select single query to get all employee name, all hobby_name in single column.
+SELECT CONCAT(first_name, " ", last_name) AS single_column FROM employee
 UNION ALL
 SELECT NAME FROM hobby;
 
-/*! Create a select query to get  employee name, his/her employee_salary */
+-- Create a select query to get  employee name, his/her employee_salary
 SELECT CONCAT(e.first_name, " ", e.last_name) AS employee_name, es.salary AS employee_salary
 FROM employee e INNER JOIN employee_salary es ON e.id = es.fk_employee_id 
 ORDER BY e.id
