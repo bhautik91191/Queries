@@ -58,15 +58,32 @@ VALUE (2000.00, '2022-06-24', 1);
 INSERT INTO employee_salary (salary, DATE, fk_employee_id)
 VALUE (30000.00, '2022-06-01', 3);
 
+INSERT INTO employee_salary (salary, DATE, fk_employee_id)
+VALUE (23000.00, '2015-07-24', 2);
+
+INSERT INTO employee_salary (salary, DATE, fk_employee_id)
+VALUE (46000.00, '2022-07-01', 3);
+
+INSERT INTO employee_salary (salary, DATE, fk_employee_id)
+VALUE (9000.00, '2022-07-24', 1);
+
 INSERT INTO employee_hobby (fk_employee_id, fk_employee_hobby_id)
-VALUE (1, 1);
+VALUE (1, 3);
 
 INSERT INTO employee_hobby (fk_employee_id, fk_employee_hobby_id)
 VALUE (2, 2);
 
 INSERT INTO employee_hobby (fk_employee_id, fk_employee_hobby_id)
-VALUE (3, 3);
+VALUE (3, 1);
 
+INSERT INTO employee_hobby (fk_employee_id, fk_employee_hobby_id)
+VALUE (3, 2);
+
+INSERT INTO employee_hobby (fk_employee_id, fk_employee_hobby_id)
+VALUE (1, 1);
+
+INSERT INTO employee_hobby (fk_employee_id, fk_employee_hobby_id)
+VALUE (2, 3);
 /*! Delete 2 records of all tables */
 DELETE FROM employee_hobby
 WHERE id > 1;
@@ -99,17 +116,23 @@ SELECT * FROM employee_salary;
 SELECT * FROM employee_hobby;
 
 /*! Create a select single query to get all employee name, all hobby_name in single column. */
-SELECT CONCAT(first_name," ", NAME) AS newcolumn FROM employee, hobby;
+SELECT first_name AS single_column FROM employee
+UNION ALL
+SELECT NAME FROM hobby;
 
 /*! Create a select query to get  employee name, his/her employee_salary */
-SELECT e.first_name, s.salary
-FROM employee_salary s INNER JOIN employee e
-ON s.fk_employee_id = e.id;
+SELECT CONCAT(e.first_name, " ", e.last_name) AS employee_name, s.salary AS employee_salary
+FROM employee e INNER JOIN employee_salary s ON e.id = s.fk_employee_id 
+ORDER BY s.salary
 
 /*! Create a select query to get employee name, total salary of employee, 
 hobby name(comma-separated - you need to use subquery for hobby name). */
-SELECT CONCAT(first_name," ", last_name) AS employee_name, employee_salary.salary AS total_salary,
-(SELECT GROUP_CONCAT(hobby.name) FROM hobby WHERE hobby.id = employee.id )AS employee_hobby
-FROM employee 
-INNER JOIN hobby ON employee.id = hobby.id
-INNER JOIN employee_salary ON employee.id = employee_salary.fk_employee_id;
+SELECT CONCAT(first_name, " ", last_name) AS employee_name, SUM(salary) AS total_salary,
+FROM employee
+INNER JOIN employee_salary d ON d.fk_employee_id = employee.id
+GROUP BY employee.id;
+
+SELECT GROUP_CONCAT(NAME) AS hobby_name, `fk_employee_id` AS Result 
+FROM employee_hobby
+INNER JOIN hobby ON employee_hobby.`fk_employee_hobby_id`= hobby.`id`
+GROUP BY employee_hobby.`fk_employee_id`;
