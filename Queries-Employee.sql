@@ -116,9 +116,9 @@ SELECT * FROM employee_salary;
 SELECT * FROM employee_hobby;
 
 /*! Create a select single query to get all employee name, all hobby_name in single column. */
-SELECT first_name AS single_column FROM employee
+SELECT e.first_name AS single_column FROM employee e
 UNION ALL
-SELECT NAME FROM hobby;
+SELECT h.name FROM hobby h;
 
 /*! Create a select query to get  employee name, his/her employee_salary */
 SELECT CONCAT(e.first_name, " ", e.last_name) AS employee_name, s.salary AS employee_salary
@@ -127,7 +127,7 @@ ORDER BY e.id
 
 /*! Create a select query to get employee name, total salary of employee, 
 hobby name(comma-separated - you need to use subquery for hobby name). */
-SELECT CONCAT(first_name, " ", last_name) AS employee_name, SUM(salary) AS total_salary, 
+SELECT CONCAT(e.first_name, " ", e.last_name) AS employee_name, SUM(d.salary) AS total_salary, 
 (
 SELECT GROUP_CONCAT(h.name) FROM  employee_hobby eh 
 INNER JOIN hobby h ON eh.`fk_employee_hobby_id`= h.`id`
